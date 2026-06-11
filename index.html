@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Fokus — Your Productivity Workspace</title>
+
+  <!-- Google Fonts: Sora (display) + Inter (body) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- ── Toast notification ──────────────────────────────── -->
+  <div class="toast" id="toast" role="alert" aria-live="polite">
+    <i class="fa-solid fa-circle-check toast__icon"></i>
+    <span class="toast__msg" id="toastMsg">Task added</span>
+  </div>
+
+  <!-- ── Confirm modal ────────────────────────────────────── -->
+  <div class="modal-overlay" id="modalOverlay" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal">
+      <div class="modal__icon"><i class="fa-solid fa-triangle-exclamation"></i></div>
+      <h2 class="modal__title" id="modalTitle">Clear all tasks?</h2>
+      <p class="modal__body">This will permanently delete all tasks. This action cannot be undone.</p>
+      <div class="modal__actions">
+        <button class="btn btn--ghost" id="modalCancel">Cancel</button>
+        <button class="btn btn--danger" id="modalConfirm">Yes, clear all</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Page wrapper ─────────────────────────────────────── -->
+  <div class="app-wrapper">
+
+    <!-- ══ SIDEBAR ════════════════════════════════════════════ -->
+    <aside class="sidebar">
+      <div class="sidebar__brand">
+        <span class="brand-dot"></span>
+        <span class="brand-name">Fokus</span>
+      </div>
+
+      <!-- Date / time -->
+      <div class="sidebar__datetime">
+        <p class="datetime__time" id="clockTime">--:--</p>
+        <p class="datetime__date" id="clockDate">Loading…</p>
+      </div>
+
+      <!-- Stats -->
+      <div class="sidebar__stats">
+        <div class="stat-card">
+          <span class="stat-card__num" id="statTotal">0</span>
+          <span class="stat-card__label">Total</span>
+        </div>
+        <div class="stat-card stat-card--done">
+          <span class="stat-card__num" id="statDone">0</span>
+          <span class="stat-card__label">Done</span>
+        </div>
+        <div class="stat-card stat-card--pending">
+          <span class="stat-card__num" id="statPending">0</span>
+          <span class="stat-card__label">Pending</span>
+        </div>
+      </div>
+
+      <!-- Progress -->
+      <div class="sidebar__progress">
+        <div class="progress-header">
+          <span class="progress-label">Progress</span>
+          <span class="progress-pct" id="progressPct">0%</span>
+        </div>
+        <div class="progress-track" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" id="progressTrack">
+          <div class="progress-fill" id="progressFill"></div>
+        </div>
+      </div>
+
+      <!-- Motivational quote -->
+      <div class="sidebar__quote">
+        <i class="fa-solid fa-quote-left quote-icon" aria-hidden="true"></i>
+        <p class="quote-text" id="quoteText">Loading…</p>
+      </div>
+
+      <!-- Theme toggle -->
+      <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
+        <span class="theme-toggle__track">
+          <i class="fa-solid fa-sun theme-toggle__sun" aria-hidden="true"></i>
+          <i class="fa-solid fa-moon theme-toggle__moon" aria-hidden="true"></i>
+          <span class="theme-toggle__thumb"></span>
+        </span>
+        <span class="theme-toggle__label" id="themeLabel">Light mode</span>
+      </button>
+    </aside>
+
+    <!-- ══ MAIN ════════════════════════════════════════════════ -->
+    <main class="main">
+
+      <!-- Header row -->
+      <header class="main__header">
+        <div>
+          <h1 class="main__title">My Tasks</h1>
+          <p class="main__sub">Stay focused. Ship things.</p>
+        </div>
+        <button class="btn btn--danger-ghost" id="clearAllBtn" aria-label="Clear all tasks">
+          <i class="fa-solid fa-trash-can"></i>
+          <span>Clear all</span>
+        </button>
+      </header>
+
+      <!-- Add task row -->
+      <div class="add-task-row">
+        <div class="add-task-input-wrap">
+          <i class="fa-solid fa-plus add-task-icon" aria-hidden="true"></i>
+          <input
+            type="text"
+            class="add-task-input"
+            id="taskInput"
+            placeholder="Add a new task…"
+            maxlength="160"
+            autocomplete="off"
+            aria-label="New task text"
+          />
+        </div>
+        <select class="priority-select" id="prioritySelect" aria-label="Priority level">
+          <option value="high">🔴 High</option>
+          <option value="medium" selected>🟡 Medium</option>
+          <option value="low">🟢 Low</option>
+        </select>
+        <button class="btn btn--primary" id="addTaskBtn">
+          <i class="fa-solid fa-arrow-up" aria-hidden="true"></i>
+          <span>Add</span>
+        </button>
+      </div>
+
+      <!-- Search + filter bar -->
+      <div class="toolbar">
+        <div class="search-wrap">
+          <i class="fa-solid fa-magnifying-glass search-icon" aria-hidden="true"></i>
+          <input
+            type="search"
+            class="search-input"
+            id="searchInput"
+            placeholder="Search tasks…"
+            aria-label="Search tasks"
+          />
+        </div>
+        <div class="filter-tabs" role="tablist">
+          <button class="filter-tab filter-tab--active" data-filter="all" role="tab" aria-selected="true">All</button>
+          <button class="filter-tab" data-filter="pending" role="tab" aria-selected="false">Pending</button>
+          <button class="filter-tab" data-filter="completed" role="tab" aria-selected="false">Completed</button>
+        </div>
+      </div>
+
+      <!-- Task list -->
+      <ul class="task-list" id="taskList" aria-label="Task list"></ul>
+
+      <!-- Empty state -->
+      <div class="empty-state" id="emptyState" aria-live="polite">
+        <i class="fa-regular fa-clipboard empty-state__icon" aria-hidden="true"></i>
+        <p class="empty-state__title">Nothing here yet</p>
+        <p class="empty-state__sub">Add your first task above to get started.</p>
+      </div>
+
+    </main>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
