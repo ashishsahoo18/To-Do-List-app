@@ -409,3 +409,446 @@ next==='dark'
 'Light Mode';
 
 }
+/* ==========================================================
+CLOCK + QUOTE
+========================================================== */
+
+function startClock(){
+
+function tick(){
+
+const now=
+new Date();
+
+clockTime.textContent=
+
+now.toLocaleTimeString(
+[],
+{
+hour:'2-digit',
+minute:'2-digit'
+}
+);
+
+clockDate.textContent=
+
+now.toLocaleDateString(
+[],
+{
+weekday:'long',
+month:'long',
+day:'numeric'
+}
+);
+
+}
+
+tick();
+
+setInterval(
+tick,
+1000
+);
+
+}
+
+
+
+function setQuote(){
+
+quoteText.textContent=
+
+QUOTES[
+Math.floor(
+Math.random()
+*
+QUOTES.length
+)
+];
+
+}
+
+
+
+/* ==========================================================
+NOTIFICATIONS
+========================================================== */
+
+function requestNotify(){
+
+if(
+'Notification'
+in window
+){
+
+Notification
+.requestPermission();
+
+}
+
+}
+
+
+
+function notify(
+msg
+){
+
+if(
+
+'Notification'
+in window
+
+&&
+
+Notification.permission
+===
+'granted'
+
+){
+
+new Notification(
+msg
+);
+
+}
+
+}
+
+
+
+/* ==========================================================
+UTILS
+========================================================== */
+
+function uid(){
+
+return
+
+Date.now()
+.toString(
+36
+)
+
++
+
+Math.random()
+.toString(
+36
+)
+.slice(
+2,
+7
+);
+
+}
+
+
+
+function escapeHtml(
+str
+){
+
+return str
+
+.replace(
+/&/g,
+'&amp;'
+)
+
+.replace(
+/</g,
+'&lt;'
+)
+
+.replace(
+/>/g,
+'&gt;'
+);
+
+}
+
+
+
+function timeAgo(
+ts
+){
+
+const s=
+
+Math.floor(
+(
+Date.now()
+-
+ts
+)
+/
+1000
+);
+
+if(
+s<60
+)
+return'now';
+
+if(
+s<3600
+)
+return Math.floor(
+s/60
+)+'m';
+
+if(
+s<86400
+)
+return Math.floor(
+s/3600
+)+'h';
+
+return Math.floor(
+s/86400
+)+'d';
+
+}
+
+
+
+/* ==========================================================
+TASK HELPERS
+========================================================== */
+
+function isOverdue(
+task
+){
+
+if(
+!task.dueDate
+||
+task.completed
+)
+
+return false;
+
+const today=
+new Date();
+
+today.setHours(
+0,
+0,
+0,
+0
+);
+
+const due=
+new Date(
+task.dueDate
+);
+
+return due<today;
+
+}
+
+
+
+/* ==========================================================
+ADD TASK
+========================================================== */
+
+function addTask(){
+
+const text=
+
+taskInput.value
+.trim();
+
+if(
+!text
+)
+return;
+
+
+
+tasks.unshift({
+
+id:
+uid(),
+
+text,
+
+priority:
+prioritySelect.value,
+
+completed:
+false,
+
+dueDate:
+
+dueDateInput.value
+
+||
+
+null,
+
+createdAt:
+Date.now()
+
+});
+
+
+
+saveTasks();
+
+
+
+taskInput.value='';
+
+dueDateInput.value='';
+
+prioritySelect.value='medium';
+
+charCount.textContent='160';
+
+
+
+render();
+
+notify(
+'Task added'
+);
+
+showToast(
+'Task added'
+);
+
+}
+
+
+
+/* ==========================================================
+TASK ACTIONS
+========================================================== */
+
+function toggleTask(
+id
+){
+
+const task=
+
+tasks.find(
+t=>
+t.id===id
+);
+
+if(
+!task
+)return;
+
+task.completed=
+
+!task.completed;
+
+saveTasks();
+
+render();
+
+}
+
+
+
+function deleteTask(
+id
+){
+
+const index=
+
+tasks.findIndex(
+t=>
+t.id===id
+);
+
+if(
+index<0
+)
+return;
+
+
+
+undoStack={
+
+task:
+tasks[index],
+
+index
+
+};
+
+
+
+tasks.splice(
+index,
+1
+);
+
+
+
+saveTasks();
+
+render();
+
+
+
+showToast(
+'Deleted',
+true
+);
+
+}
+
+
+
+function undoDelete(){
+
+if(
+!undoStack
+)
+return;
+
+tasks.splice(
+
+undoStack.index,
+
+0,
+
+undoStack.task
+
+);
+
+undoStack=null;
+
+saveTasks();
+
+render();
+
+}
+
+
+
+/* ==========================================================
+CLEAR
+========================================================== */
+
+function clearAll(){
+
+tasks=[];
+
+saveTasks();
+
+render();
+
+modalOverlay
+.classList
+.remove(
+'is-open'
+);
+
+}
