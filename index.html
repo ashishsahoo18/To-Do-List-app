@@ -3,20 +3,35 @@
 
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
 
-<title>Fokus Todo App</title>
+<meta
+name="viewport"
+content="width=device-width,initial-scale=1">
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
+<title>
+Fokus — Productivity Workspace
+</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap"
+<link
+rel="preconnect"
+href="https://fonts.googleapis.com">
+
+<link
+rel="preconnect"
+href="https://fonts.gstatic.com"
+crossorigin>
+
+<link
+href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700&family=Inter:wght@400;500;600&display=swap"
 rel="stylesheet">
 
 <link
 rel="stylesheet"
 href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
-<link rel="stylesheet" href="style.css">
+<link
+rel="stylesheet"
+href="style.css">
 
 </head>
 
@@ -24,7 +39,9 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
 
 <!-- TOAST -->
 
-<div class="toast" id="toast">
+<div
+class="toast"
+id="toast">
 
 <i
 id="toastIcon"
@@ -44,34 +61,49 @@ Undo
 </div>
 
 
-<!-- MODAL -->
+<!-- CONFIRM MODAL -->
 
-<div class="modal-overlay" id="modalOverlay">
+<div
+class="modal-overlay"
+id="modalOverlay">
 
 <div class="modal">
 
 <h2 id="modalTitle">
+
 Clear all tasks?
+
 </h2>
 
 <p>
-This action cannot be undone
+
+This action cannot be undone.
+
 </p>
 
+<div>
+
 <button id="modalCancel">
+
 Cancel
+
 </button>
 
 <button id="modalConfirm">
+
 Clear
+
 </button>
 
 </div>
 
 </div>
 
+</div>
 
-<!-- SHORTCUT MODAL -->
+
+
+<!-- SHORTCUTS -->
 
 <div
 class="modal-overlay"
@@ -79,9 +111,13 @@ id="shortcutsOverlay">
 
 <div class="modal">
 
-<h2>Keyboard Shortcuts</h2>
+<h2>
 
-<p>N → Add Task</p>
+Keyboard Shortcuts
+
+</h2>
+
+<p>N → Focus task input</p>
 
 <p>Ctrl + Z → Undo</p>
 
@@ -100,25 +136,40 @@ Close
 </div>
 
 
+
 <div class="app-wrapper">
 
 <!-- SIDEBAR -->
 
 <aside class="sidebar">
 
-<h1>Fokus</h1>
+<div class="sidebar__brand">
 
-<div>
+<span class="brand-name">
+
+Fokus
+
+</span>
+
+</div>
+
+
+<div class="sidebar__datetime">
 
 <p id="clockTime">
+
 00:00
+
 </p>
 
 <p id="clockDate">
+
 Loading...
+
 </p>
 
 </div>
+
 
 
 <div class="sidebar__stats">
@@ -126,29 +177,33 @@ Loading...
 <div>
 
 <span id="statTotal">
+
 0
+
 </span>
 
 <p>Total</p>
 
 </div>
 
-
 <div>
 
 <span id="statDone">
+
 0
+
 </span>
 
 <p>Done</p>
 
 </div>
 
-
 <div>
 
 <span id="statPending">
+
 0
+
 </span>
 
 <p>Pending</p>
@@ -158,7 +213,8 @@ Loading...
 </div>
 
 
-<div>
+
+<div class="sidebar__progress">
 
 <span id="progressPct">
 
@@ -170,18 +226,89 @@ Loading...
 class="progress-track"
 id="progressTrack">
 
-<div
-id="progressFill">
-</div>
+<div id="progressFill"></div>
 
 </div>
 
 </div>
 
+
+
+<div class="sidebar__quote">
 
 <p id="quoteText">
+
 Loading...
+
 </p>
+
+</div>
+
+
+
+<!-- POMODORO -->
+
+<div class="pomodoro">
+
+<h3>
+
+Focus Timer
+
+</h3>
+
+<div id="timer">
+
+25:00
+
+</div>
+
+<button id="startTimer">
+
+Start
+
+</button>
+
+</div>
+
+
+
+<!-- EXPORT -->
+
+<button id="exportTxt">
+
+Export TXT
+
+</button>
+
+<button id="exportJson">
+
+Export JSON
+
+</button>
+
+
+
+<!-- IMPORT -->
+
+<button id="importJson">
+
+Import JSON
+
+</button>
+
+<input
+id="importFile"
+type="file"
+hidden>
+
+
+
+<button id="shortcutsBtn">
+
+Shortcuts
+
+</button>
+
 
 
 <button id="themeToggle">
@@ -194,27 +321,6 @@ Light Mode
 
 </button>
 
-
-<button id="shortcutsBtn">
-
-Shortcuts
-
-</button>
-
-
-<button id="exportTxt">
-
-Export TXT
-
-</button>
-
-
-<button id="exportJson">
-
-Export JSON
-
-</button>
-
 </aside>
 
 
@@ -223,14 +329,23 @@ Export JSON
 
 <main class="main">
 
-<header>
+<header class="main__header">
 
-<h2>
+<div>
+
+<h1>
 
 My Tasks
 
-</h2>
+</h1>
 
+<p>
+
+Stay focused.
+
+</p>
+
+</div>
 
 <button id="clearAllBtn">
 
@@ -242,21 +357,18 @@ Clear All
 
 
 
-<!-- ADD TASK -->
+<!-- ADD -->
 
 <div class="add-task-row">
 
 <input
 id="taskInput"
-type="text"
 maxlength="160"
 placeholder="Add task">
-
 
 <input
 id="dueDateInput"
 type="date">
-
 
 <select id="prioritySelect">
 
@@ -280,7 +392,6 @@ Low
 
 </select>
 
-
 <button id="addTaskBtn">
 
 Add
@@ -288,6 +399,7 @@ Add
 </button>
 
 </div>
+
 
 
 <div>
@@ -306,14 +418,10 @@ Remaining:
 
 <!-- SEARCH -->
 
-<div>
-
 <input
 id="searchInput"
 type="search"
-placeholder="Search tasks">
-
-</div>
+placeholder="Search">
 
 
 
@@ -357,26 +465,54 @@ Overdue
 
 
 
+<!-- ANALYTICS -->
+
+<section class="analytics">
+
+<div>
+
+<h3>
+
+Productivity
+
+</h3>
+
+<p>
+
+Track your progress
+
+</p>
+
+</div>
+
+</section>
+
+
+
+<!-- TASKS -->
+
 <ul
-id="taskList"
-class="task-list">
+class="task-list"
+id="taskList">
 </ul>
 
 
 
-<div
-id="emptyState"
-class="empty-state">
+<!-- EMPTY -->
 
-<h3 class="empty-state__title">
+<div
+class="empty-state"
+id="emptyState">
+
+<p class="empty-state__title">
 
 Nothing here yet
 
-</h3>
+</p>
 
 <p class="empty-state__sub">
 
-Add first task
+Add your first task
 
 </p>
 
@@ -385,6 +521,8 @@ Add first task
 </main>
 
 </div>
+
+
 
 <script src="script.js"></script>
 
